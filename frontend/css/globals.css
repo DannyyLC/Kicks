@@ -139,3 +139,39 @@ body.text-extra-large { --font-size-base: 20px; }
    opacity: 0.5;
    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+/* ============================================
+   SWEETALERT2 - TEMA PERSONALIZADO
+   ============================================ */
+.swal2-popup {
+  background-color: var(--color-fondo) !important;
+  border: 2px solid var(--color-input-border) !important;
+  color: var(--color-texto) !important;
+}
+
+.swal2-title {
+  color: var(--color-texto) !important;
+}
+
+.swal2-html-container {
+  color: var(--color-secundario) !important;
+}
+
+.swal2-confirm {
+  background-color: var(--color-acento) !important;
+  border: none !important;
+}
+
+.swal2-confirm:hover {
+  background-color: #b00f0e !important;
+}
+
+.swal2-cancel {
+  background-color: var(--color-input-bg) !important;
+  color: var(--color-texto) !important;
+  border: 2px solid var(--color-input-border) !important;
+}
+
+.swal2-cancel:hover {
+  background-color: var(--color-input-border) !important;
+}
