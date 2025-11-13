@@ -1,29 +1,45 @@
 import { API_URL } from './config.js';
 
+// URL base del backend para las imágenes
+const BACKEND_URL = 'http://localhost:3000';
+
 /**
- * Obtener productos destacados
- * @param {number} limit - Número de productos a obtener
- * @returns {Promise<Array>} - Array de productos
+ * Obtener URL completa de la imagen
+ * @param {string} imagenPath - Ruta de la imagen (/uploads/...)
+ * @returns {string} - URL completa de la imagen
  */
-export async function obtenerProductosDestacados(limit = 4) {
+export function obtenerUrlImagen(imagenPath) {
+    if (!imagenPath) return null;
+    return `${BACKEND_URL}${imagenPath}`;
+}
+
+/**
+ * Obtener productos aleatorios (para homepage)
+ * @returns {Promise<Array>} - Array de productos aleatorios (máximo 4)
+ */
+export async function obtenerProductosAleatorios() {
     try {
-        const response = await fetch(`${API_URL}/productos/destacados?limit=${limit}`);
+        const response = await fetch(`${API_URL}/products/randoms`);
         
         if (!response.ok) {
             throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
         
         const data = await response.json();
-        return data;
+        // Agregar URL completa a las imágenes
+        return data.map(producto => ({
+            ...producto,
+            imagenCompleta: obtenerUrlImagen(producto.imagen)
+        }));
     } catch (error) {
-        console.error('Error al obtener productos destacados:', error);
+        console.error('Error al obtener productos aleatorios:', error);
         throw error;
     }
 }
 
 /**
  * Obtener todos los productos con filtros opcionales
- * @param {Object} filtros - Objeto con filtros (categoria, precioMin, precioMax, etc.)
+ * @param {Object} filtros - Objeto con filtros (categoria, hasDescuento)
  * @returns {Promise<Array>} - Array de productos
  */
 export async function obtenerProductos(filtros = {}) {
@@ -31,13 +47,9 @@ export async function obtenerProductos(filtros = {}) {
         const params = new URLSearchParams();
         
         if (filtros.categoria) params.append('categoria', filtros.categoria);
-        if (filtros.precioMin) params.append('precioMin', filtros.precioMin);
-        if (filtros.precioMax) params.append('precioMax', filtros.precioMax);
-        if (filtros.busqueda) params.append('q', filtros.busqueda);
-        if (filtros.limite) params.append('limit', filtros.limite);
-        if (filtros.pagina) params.append('page', filtros.pagina);
+        if (filtros.hasDescuento !== undefined) params.append('hasDescuento', filtros.hasDescuento ? '1' : '0');
         
-        const url = `${API_URL}/productos${params.toString() ? '?' + params.toString() : ''}`;
+        const url = `${API_URL}/products${params.toString() ? '?' + params.toString() : ''}`;
         const response = await fetch(url);
         
         if (!response.ok) {
@@ -45,7 +57,11 @@ export async function obtenerProductos(filtros = {}) {
         }
         
         const data = await response.json();
-        return data;
+        // Agregar URL completa a las imágenes
+        return data.map(producto => ({
+            ...producto,
+            imagenCompleta: obtenerUrlImagen(producto.imagen)
+        }));
     } catch (error) {
         console.error('Error al obtener productos:', error);
         throw error;
@@ -55,17 +71,27 @@ export async function obtenerProductos(filtros = {}) {
 /**
  * Obtener un producto por su ID
  * @param {string} id - ID del producto
- * @returns {Promise<Object>} - Objeto del producto
+ * @returns {Promise<Object>} - Objeto del producto con todas sus imágenes
  */
 export async function obtenerProductoPorId(id) {
     try {
-        const response = await fetch(`${API_URL}/productos/${id}`);
+        const response = await fetch(`${API_URL}/products/${id}`);
         
         if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error('Producto no encontrado');
+            }
             throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
         
         const data = await response.json();
+        // Agregar URLs completas a todas las imágenes
+        if (data.imagenes && Array.isArray(data.imagenes)) {
+            data.imagenesCompletas = data.imagenes.map(img => ({
+                id: img.id,
+                url: obtenerUrlImagen(img.url)
+            }));
+        }
         return data;
     } catch (error) {
         console.error('Error al obtener producto:', error);

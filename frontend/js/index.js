@@ -6,11 +6,11 @@ async function loadFeaturedProducts() {
     
     try {
         // Importar funciones necesarias
-        const { obtenerProductosDestacados } = await import('./api/productos.js');
+        const { obtenerProductosAleatorios } = await import('./api/productos.js');
         const { renderProductCards } = await import('../components/product-card.js');
         
-        // Obtener productos destacados del backend
-        const productos = await obtenerProductosDestacados(4);
+        // Obtener productos aleatorios del backend (máximo 4)
+        const productos = await obtenerProductosAleatorios();
         
         // Renderizar productos usando el componente ProductCard
         renderProductCards(productos, productsGrid);

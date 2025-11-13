@@ -18,18 +18,26 @@ export function ProductCard(producto) {
     id,
     nombre,
     imagen,
+    imagenCompleta,
     precio,
     descuento = 0,
+    hasDescuento = 0,
     categoria = 'General',
     esNuevo = false,
-    cantidad = 0
+    stock = 0
   } = producto;
 
-  // Calcular precio original si hay descuento
-  const precioOriginal = descuento > 0 ? precio / (1 - descuento) : null;
-  const tieneDescuento = descuento > 0 && precioOriginal;
+  // Usar imagenCompleta si está disponible, sino usar imagen
+  const imagenUrl = imagenCompleta || imagen;
+  
+  // El descuento viene como decimal (0.10 = 10%)
+  const tieneDescuento = hasDescuento === 1 && descuento > 0;
   const discountPercent = tieneDescuento ? Math.round(descuento * 100) : 0;
-  const estaAgotado = cantidad === 0;
+  
+  // Calcular precio original si hay descuento
+  const precioOriginal = tieneDescuento ? precio / (1 - descuento) : null;
+  
+  const estaAgotado = stock === 0;
 
   // Crear el elemento card
   const card = document.createElement('div');
@@ -41,8 +49,8 @@ export function ProductCard(producto) {
   // HTML de la tarjeta
   card.innerHTML = `
     <div class="product-image" data-product-link>
-      <div class="product-placeholder" style="background-image: url('${imagen || ''}');">
-        ${!imagen ? '<div class="product-placeholder-bg"></div>' : ''}
+      <div class="product-placeholder" style="background-image: url('${imagenUrl || ''}');">
+        ${!imagenUrl ? '<div class="product-placeholder-bg"></div>' : ''}
       </div>
       ${esNuevo ? '<div class="product-badge product-badge--new">Nuevo</div>' : ''}
       ${tieneDescuento ? `<div class="product-badge product-badge--sale">-${discountPercent}%</div>` : ''}
@@ -98,7 +106,7 @@ export function ProductCard(producto) {
   if (!estaAgotado) {
     cartBtn.addEventListener('click', (e) => {
       e.stopPropagation(); // Evitar que se active el click del card
-      addToCart(id, nombre, precio, imagen);
+      addToCart(id, nombre, precio, imagenUrl);
     });
   }
 
