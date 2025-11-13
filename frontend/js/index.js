@@ -5,20 +5,15 @@ async function loadFeaturedProducts() {
     const productsGrid = document.getElementById('featured-products-grid');
     
     try {
-        // Importar la función de API dinámicamente
+        // Importar funciones necesarias
         const { obtenerProductosDestacados } = await import('./api/productos.js');
+        const { renderProductCards } = await import('../components/product-card.js');
         
         // Obtener productos destacados del backend
         const productos = await obtenerProductosDestacados(4);
         
-        // Limpiar el loading
-        productsGrid.innerHTML = '';
-        
-        // Renderizar productos
-        productos.forEach(producto => {
-            const productCard = createProductCard(producto);
-            productsGrid.appendChild(productCard);
-        });
+        // Renderizar productos usando el componente ProductCard
+        renderProductCards(productos, productsGrid);
         
     } catch (error) {
         console.error('Error al cargar productos:', error);
@@ -29,66 +24,6 @@ async function loadFeaturedProducts() {
             </div>
         `;
     }
-}
-
-// Función para crear una tarjeta de producto
-function createProductCard(producto) {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    
-    // Determinar si hay descuento
-    const hasDiscount = producto.precioOriginal && producto.precioOriginal > producto.precio;
-    const discountPercent = hasDiscount 
-        ? Math.round(((producto.precioOriginal - producto.precio) / producto.precioOriginal) * 100)
-        : 0;
-    
-    card.innerHTML = `
-        <div class="product-image">
-            <div class="product-placeholder" style="background-image: url('${producto.imagen || ''}');">
-                ${!producto.imagen ? '<div style="background: linear-gradient(135deg, var(--color-input-bg) 0%, var(--color-input-border) 100%); width: 100%; height: 100%;"></div>' : ''}
-            </div>
-            ${producto.esNuevo ? '<div class="product-badge">Nuevo</div>' : ''}
-            ${hasDiscount ? `<div class="product-badge product-badge-sale">-${discountPercent}%</div>` : ''}
-        </div>
-        <div class="product-info">
-            <h3 class="product-name">${producto.nombre}</h3>
-            <p class="product-category">${producto.categoria || 'General'}</p>
-            <div class="product-footer">
-                ${hasDiscount ? `
-                    <div class="product-price-group">
-                        <span class="product-price-old">$${producto.precioOriginal.toFixed(2)}</span>
-                        <span class="product-price">$${producto.precio.toFixed(2)}</span>
-                    </div>
-                ` : `
-                    <span class="product-price">$${producto.precio.toFixed(2)}</span>
-                `}
-                <button class="product-cart-btn" onclick="addToCart('${producto.id}')" aria-label="Agregar al carrito">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    `;
-    
-    // Hacer clic en la tarjeta para ir al detalle del producto
-    card.addEventListener('click', (e) => {
-        // No redirigir si se hizo clic en el botón de carrito
-        if (!e.target.closest('.product-cart-btn')) {
-            window.location.href = `tienda/producto.html?id=${producto.id}`;
-        }
-    });
-    
-    return card;
-}
-
-// Función para agregar al carrito
-function addToCart(productId) {
-    // TODO: Implementar la lógica para agregar al carrito
-    console.log('Agregar producto al carrito:', productId);
-    // Aquí puedes llamar a tu API o manejar el carrito localmente
 }
 
 // ============================================

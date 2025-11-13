@@ -530,6 +530,72 @@
   margin-top: 20px;
 }
 
+.products-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--color-secundario);
+  font-size: 1.1rem;
+}
+
+/* ============================================
+   PRODUCT CARD - ESTADOS ADICIONALES
+   ============================================ */
+.product-card--out-of-stock {
+  opacity: 0.7;
+}
+
+.product-card--out-of-stock .product-image {
+  position: relative;
+}
+
+.product-card--out-of-stock .product-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.product-badge--new {
+  background-color: #4CAF50;
+}
+
+.product-badge--sold-out {
+  background-color: #757575;
+  z-index: 2;
+}
+
+.product-placeholder-bg {
+  background: linear-gradient(135deg, var(--color-input-bg) 0%, var(--color-input-border) 100%);
+  width: 100%;
+  height: 100%;
+}
+
+.product-cart-btn--disabled {
+  background-color: var(--color-gris);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.product-cart-btn--disabled:hover {
+  background-color: var(--color-gris);
+  transform: none;
+}
+
+.product-cart-btn--added {
+  background-color: #4CAF50;
+  animation: pulse 0.5s ease;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
 /* ============================================
    BENEFITS SECTION
    ============================================ */

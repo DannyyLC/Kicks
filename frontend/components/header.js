@@ -39,6 +39,7 @@ export function Header() {
         <li><a href="${basePath}tienda/nosotros.html" class="nav-link">Nosotros</a></li>
         <li><a href="${basePath}tienda/contacto.html" class="nav-link">Contacto</a></li>
         <li><a href="${basePath}tienda/suscripcion.html" class="nav-link">Suscripcion</a></li>
+        <li><a href="${basePath}tienda/preguntas-frecuentes.html" class="nav-link">Preguntas Frecuentes</a></li>
       </ul>
       
       <!-- Acciones a la derecha -->
@@ -76,6 +77,7 @@ export function Header() {
         <li><a href="${basePath}tienda/nosotros.html" class="mobile-nav-link">Nosotros</a></li>
         <li><a href="${basePath}tienda/contacto.html" class="mobile-nav-link">Contacto</a></li>
         <li><a href="${basePath}tienda/suscripcion.html" class="mobile-nav-link">Suscripcion</a></li>
+        <li><a href="${basePath}tienda/preguntas-frecuentes.html" class="mobile-nav-link">Preguntas Frecuentes</a></li>
         ${isLoggedIn ? `
           <li>
             <button class="mobile-nav-link mobile-nav-icon" aria-label="Carrito">
