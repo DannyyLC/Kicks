@@ -34,6 +34,18 @@ async function initTables() {
         `
     },
     {
+      name: "producto_imagenes",
+      createSQL: `
+        CREATE TABLE producto_imagenes (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          producto_id INT NOT NULL,
+          url VARCHAR(255) NOT NULL,
+          FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE,
+          INDEX idx_producto (producto_id)
+        )
+      `
+    },
+    {
       name: "ordenes",
       createSQL: `
         CREATE TABLE ordenes (
