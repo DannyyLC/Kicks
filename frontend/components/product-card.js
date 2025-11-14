@@ -30,12 +30,16 @@ export function ProductCard(producto) {
   // Usar imagenCompleta si está disponible, sino usar imagen
   const imagenUrl = imagenCompleta || imagen;
   
+  // Convertir precio y descuento a números (vienen como strings de MySQL)
+  const precioNum = parseFloat(precio);
+  const descuentoNum = parseFloat(descuento);
+  
   // El descuento viene como decimal (0.10 = 10%)
-  const tieneDescuento = hasDescuento === 1 && descuento > 0;
-  const discountPercent = tieneDescuento ? Math.round(descuento * 100) : 0;
+  const tieneDescuento = hasDescuento === 1 && descuentoNum > 0;
+  const discountPercent = tieneDescuento ? Math.round(descuentoNum * 100) : 0;
   
   // Calcular precio original si hay descuento
-  const precioOriginal = tieneDescuento ? precio / (1 - descuento) : null;
+  const precioOriginal = tieneDescuento ? precioNum / (1 - descuentoNum) : null;
   
   const estaAgotado = stock === 0;
 
@@ -63,10 +67,10 @@ export function ProductCard(producto) {
         ${tieneDescuento ? `
           <div class="product-price-group">
             <span class="product-price-old">$${precioOriginal.toFixed(2)}</span>
-            <span class="product-price">$${precio.toFixed(2)}</span>
+            <span class="product-price">$${precioNum.toFixed(2)}</span>
           </div>
         ` : `
-          <span class="product-price">$${precio.toFixed(2)}</span>
+          <span class="product-price">$${precioNum.toFixed(2)}</span>
         `}
         <button 
           class="product-cart-btn ${estaAgotado ? 'product-cart-btn--disabled' : ''}" 
@@ -106,7 +110,7 @@ export function ProductCard(producto) {
   if (!estaAgotado) {
     cartBtn.addEventListener('click', (e) => {
       e.stopPropagation(); // Evitar que se active el click del card
-      addToCart(id, nombre, precio, imagenUrl);
+      addToCart(id, nombre, precioNum, imagenUrl);
     });
   }
 

@@ -9,6 +9,63 @@ let imagenesSeleccionadas = [];
 let imagenesExistentes = [];
 
 /**
+ * Obtener configuración de SweetAlert según el tema actual
+ */
+function getSwalConfig() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    return {
+        background: isDark ? '#1a1a1a' : '#ffffff',
+        color: isDark ? '#e0e0e0' : '#333333',
+        confirmButtonColor: isDark ? '#4a9eff' : '#007bff',
+        cancelButtonColor: isDark ? '#6c757d' : '#6c757d',
+        iconColor: isDark ? '#4a9eff' : '#007bff'
+    };
+}
+
+/**
+ * Mostrar alerta de éxito con SweetAlert
+ */
+function mostrarAlertaExito(mensaje, titulo = '¡Éxito!') {
+    Swal.fire({
+        icon: 'success',
+        title: titulo,
+        text: mensaje,
+        ...getSwalConfig(),
+        timer: 2000,
+        showConfirmButton: false
+    });
+}
+
+/**
+ * Mostrar alerta de error con SweetAlert
+ */
+function mostrarAlertaError(mensaje, titulo = 'Error') {
+    Swal.fire({
+        icon: 'error',
+        title: titulo,
+        text: mensaje,
+        ...getSwalConfig(),
+        confirmButtonText: 'Entendido'
+    });
+}
+
+/**
+ * Mostrar confirmación con SweetAlert
+ */
+async function mostrarConfirmacion(mensaje, titulo = '¿Estás seguro?') {
+    const result = await Swal.fire({
+        icon: 'warning',
+        title: titulo,
+        text: mensaje,
+        ...getSwalConfig(),
+        showCancelButton: true,
+        confirmButtonText: 'Sí, continuar',
+        cancelButtonText: 'Cancelar'
+    });
+    return result.isConfirmed;
+}
+
+/**
  * Obtener URL completa de la imagen
  */
 function obtenerUrlImagen(imagenPath) {
@@ -20,24 +77,14 @@ function obtenerUrlImagen(imagenPath) {
  * Mostrar mensaje de error
  */
 function mostrarError(mensaje) {
-    const errorDiv = document.getElementById('modal-error');
-    errorDiv.textContent = mensaje;
-    errorDiv.classList.add('active');
-    setTimeout(() => {
-        errorDiv.classList.remove('active');
-    }, 5000);
+    mostrarAlertaError(mensaje);
 }
 
 /**
  * Mostrar mensaje de éxito
  */
 function mostrarExito(mensaje) {
-    const successDiv = document.getElementById('modal-success');
-    successDiv.textContent = mensaje;
-    successDiv.classList.add('active');
-    setTimeout(() => {
-        successDiv.classList.remove('active');
-    }, 3000);
+    mostrarAlertaExito(mensaje);
 }
 
 /**
@@ -124,10 +171,10 @@ function renderizarTablaProductos(productos) {
                         </td>
                         <td><strong>${producto.nombre}</strong></td>
                         <td>${producto.categoria}</td>
-                        <td>$${producto.precio.toFixed(2)}</td>
+                        <td>$${parseFloat(producto.precio).toFixed(2)}</td>
                         <td>
                             ${producto.hasDescuento === 1 
-                                ? `<span class="badge badge-warning">${(producto.descuento * 100).toFixed(0)}%</span>` 
+                                ? `<span class="badge badge-warning">${(parseFloat(producto.descuento) * 100).toFixed(0)}%</span>` 
                                 : '-'
                             }
                         </td>
@@ -220,7 +267,7 @@ export async function abrirModalEditar(id) {
         
     } catch (error) {
         console.error('Error:', error);
-        alert('Error al cargar el producto');
+        mostrarAlertaError('No se pudo cargar la información del producto');
     } finally {
         loadingDiv.classList.remove('active');
     }
@@ -246,7 +293,11 @@ function renderizarImagenesExistentes() {
  * Eliminar imagen existente del producto
  */
 window.eliminarImagenExistente = async function(imageId) {
-    if (!confirm('¿Estás seguro de eliminar esta imagen?')) {
+    const confirmado = await mostrarConfirmacion(
+        'Esta acción no se puede deshacer',
+        '¿Eliminar esta imagen?'
+    );
+    if (!confirmado) {
         return;
     }
     
@@ -385,12 +436,9 @@ export async function enviarFormulario(event) {
             await crearProducto();
         }
         
+        cerrarModal();
+        await cargarProductos();
         mostrarExito(isEditing ? 'Producto actualizado correctamente' : 'Producto creado correctamente');
-        
-        setTimeout(() => {
-            cerrarModal();
-            cargarProductos();
-        }, 1500);
         
     } catch (error) {
         console.error('Error:', error);
@@ -493,7 +541,11 @@ async function agregarImagenesAProducto(productId) {
  * Eliminar producto (soft delete)
  */
 export async function eliminarProducto(id, nombre) {
-    if (!confirm(`¿Estás seguro de eliminar el producto "${nombre}"?`)) {
+    const confirmado = await mostrarConfirmacion(
+        `El producto "${nombre}" será eliminado. Esta acción no se puede deshacer.`,
+        '¿Eliminar producto?'
+    );
+    if (!confirmado) {
         return;
     }
     
@@ -509,12 +561,12 @@ export async function eliminarProducto(id, nombre) {
             throw new Error('Error al eliminar el producto');
         }
         
-        alert('Producto eliminado correctamente');
+        mostrarAlertaExito('El producto ha sido eliminado correctamente');
         cargarProductos();
         
     } catch (error) {
         console.error('Error:', error);
-        alert('Error al eliminar el producto');
+        mostrarAlertaError('No se pudo eliminar el producto. Intenta nuevamente.');
     } finally {
         loadingDiv.classList.remove('active');
     }

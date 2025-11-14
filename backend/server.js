@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const path = require("path");
 const productsRoutes = require("./routes/products.routes");
 
 dotenv.config();
@@ -15,6 +16,9 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     optionsSuccessStatus: 200
 }));
+
+// Servir archivos estáticos desde la carpeta uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get("api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/products", productsRoutes);

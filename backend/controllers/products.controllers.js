@@ -24,15 +24,17 @@ exports.getProductById = async (req, res) => {
             return res.status(404).json({ message: "Producto no encontrado" });
         }
         
-        res.json(rows);
+        res.json(rows[0]);
     } catch (error) {
-        console.error("Error al obtener los productos:", error);
-        res.status(500).json({ message: "Error al obtener los productos" });
+        console.error("Error al obtener el producto:", error);
+        res.status(500).json({ message: "Error al obtener el producto" });
     }
 }
 
 exports.createProduct = async (req, res) => {
     const { nombre, descripcion, precio, stock, categoria, descuento } = req.body;
+    
+    // Validación de campos
     if (
         nombre === undefined ||
         descripcion === undefined ||
@@ -49,11 +51,32 @@ exports.createProduct = async (req, res) => {
     }
 
     try {
+        // Crear el producto
         const [result] = await pool.query(
             'INSERT INTO productos (nombre, descripcion, precio, stock, categoria, descuento, hasDescuento) VALUES (?, ?, ?, ?, ?, ?, ?)',
             [nombre, descripcion, precio, stock, categoria, descuento, descuento > 0 ? 1 : 0]
         );
-        res.status(201).json({ id: result.insertId, nombre, descripcion, precio, stock, categoria, descuento });
+        
+        // Si hay imágenes subidas, guardar las rutas
+        if (req.files && req.files.length > 0) {
+            // Guardar la primera imagen como imagen principal
+            const imagenPrincipal = '/uploads/' + req.files[0].filename;
+            await pool.query(
+                'UPDATE productos SET imagen = ? WHERE id = ?',
+                [imagenPrincipal, result.insertId]
+            );
+        }
+        
+        res.status(201).json({ 
+            id: result.insertId, 
+            nombre, 
+            descripcion, 
+            precio, 
+            stock, 
+            categoria, 
+            descuento,
+            imagen: req.files && req.files.length > 0 ? '/uploads/' + req.files[0].filename : null
+        });
     } catch (error) {
         console.error("Error al crear el producto:", error);
         res.status(500).json({ message: "Error al crear el producto" });
