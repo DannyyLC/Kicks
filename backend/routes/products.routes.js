@@ -7,7 +7,8 @@ const {
     deleteProduct, 
     productosAleatorios,
     addProductImages,
-    deleteProductImage
+    deleteProductImage,
+    getStockByCategory
 } = require('../controllers/products.controllers');
 const upload = require('../middleware/uploadImages');
 
@@ -19,6 +20,7 @@ router.get('/randoms', productosAleatorios);
 router.put('/:id', updateProduct);
 router.delete('/:id', deleteProduct);
 router.get('/:id', getProductById);
+router.get('/stock/categoria/:categoria', getStockByCategory);
 
 // Gestión de imágenes
 router.post('/:id/imagenes', upload.array('imagenes', 5), addProductImages); // Agregar imágenes

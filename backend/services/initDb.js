@@ -52,12 +52,17 @@ async function initTables() {
             id INT AUTO_INCREMENT PRIMARY KEY,
             usuario_id INT NOT NULL,
             total DECIMAL(10, 2) NOT NULL,
+            subtotal DECIMAL(10, 2) NOT NULL,
+            impuestos DECIMAL(10, 2) NOT NULL,
+            gasto_envio DECIMAL(10, 2) NOT NULL,
             metodo_pago VARCHAR(50) NOT NULL,
             nombre_envio VARCHAR(100) NOT NULL,
             direccion_envio VARCHAR(255) NOT NULL,
             ciudad VARCHAR(50) NOT NULL,
             codigo_postal VARCHAR(20) NOT NULL,
             telefono VARCHAR(20) NOT NULL,
+            cupon VARCHAR(50),
+            fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
         )
       `
@@ -71,10 +76,12 @@ async function initTables() {
             producto_id INT NOT NULL,
             cantidad INT NOT NULL,
             precio_unitario DECIMAL(10, 2) NOT NULL,
+            categoria VARCHAR(50) NOT NULL,
             FOREIGN KEY (orden_id) REFERENCES ordenes(id) ON DELETE CASCADE,
             FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE RESTRICT,
             INDEX idx_orden (orden_id),
-            INDEX idx_producto (producto_id)
+            INDEX idx_producto (producto_id),
+            INDEX idx_categoria (categoria)
         )
       `
     },

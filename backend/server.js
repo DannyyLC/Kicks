@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const path = require("path");
 const productsRoutes = require("./routes/products.routes");
 const cartRoutes = require("./routes/cart.routes");
+const ordenesRoutes = require("./routes/ordenes.routes");
 
 dotenv.config();
 
@@ -24,6 +25,8 @@ app.use(cors({
 app.get("api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/products", productsRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/ordenes", ordenesRoutes);
+
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);

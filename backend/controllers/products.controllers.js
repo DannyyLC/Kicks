@@ -267,3 +267,18 @@ exports.deleteProductImage = async (req, res) => {
         res.status(500).json({ message: "Error al eliminar imagen" });
     }
 }
+
+exports.getStockByCategory = async (req, res) => {
+    const { categoria } = req.params;
+
+    try {
+        const [rows] = await pool.query(
+            'SELECT id, stock, nombre FROM productos WHERE categoria = ? AND estado = 1',
+            [categoria]
+        );
+        res.json(rows);
+    } catch (error) {
+        console.error("Error al obtener el stock por categoría:", error);
+        res.status(500).json({ message: "Error al obtener el stock por categoría" });
+    }
+}
