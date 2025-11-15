@@ -25,6 +25,7 @@ export const API_ENDPOINTS = {
   CART: {
     BASE: '/cart',
     DELETE_ITEM: (itemId) => `/cart/${itemId}`,
+    UPDATE_ITEM: (itemId) => `/cart/${itemId}`,
   },
   
   // Órdenes

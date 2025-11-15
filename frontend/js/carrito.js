@@ -1,23 +1,36 @@
-import { obtenerCarrito, actualizarCantidad, eliminarDelCarrito } from './api/carrito.js';
-import { cartIcon } from './utils/icons.js';
-import { getSwalConfig } from './utils/utilities.js';
+import { getCart, updateCartItem, removeFromCart } from '../js/utils/auth.js';
+import { cartIcon } from '../js/utils/icons.js';
+import { API_URL } from './api/config.js';
 
-const BACKEND_URL = 'http://localhost:3000';
 let carritoItems = [];
 
-/**
- * Obtener URL completa de la imagen
- */
+// Obtener URL completa de la imagen
 function obtenerUrlImagen(imagenPath) {
+    if (!imagenPath) return '';
+    if (/^https?:\/\//i.test(imagenPath)) {
+        return imagenPath;
+    }
+    const baseUrl = API_URL.replace('/api', ''); 
+    return `${baseUrl}${imagenPath}`;
+}
+
+// Cargar carrito de la API y renderizar
+async function cargarCarrito() {
     const container = document.getElementById('cart-content');
     
     try {
-        carritoItems = await obtenerCarrito();
+        const resultado = await getCart();
         
-        if (carritoItems.length === 0) {
-            mostrarCarritoVacio();
+        if (resultado.success) {
+            carritoItems = resultado.cart;
+            
+            if (carritoItems.length === 0) {
+                mostrarCarritoVacio();
+            } else {
+                renderizarCarrito();
+            }
         } else {
-            renderizarCarrito();
+            throw new Error(resultado.error);
         }
     } catch (error) {
         console.error('Error al cargar carrito:', error);
@@ -30,9 +43,7 @@ function obtenerUrlImagen(imagenPath) {
     }
 }
 
-/**
- * Mostrar mensaje de carrito vacío
- */
+// Mostrar mensaje de carrito vacío
 function mostrarCarritoVacio() {
     const container = document.getElementById('cart-content');
     container.innerHTML = `
@@ -46,9 +57,7 @@ function mostrarCarritoVacio() {
     `;
 }
 
-/**
- * Renderizar carrito con productos
- */
+// Renderizar carrito con productos
 function renderizarCarrito() {
     const container = document.getElementById('cart-content');
     
@@ -109,9 +118,7 @@ function renderizarCarrito() {
     `;
 }
 
-/**
- * Calcular total del carrito
- */
+// Calcular total del carrito
 function calcularTotal() {
     return carritoItems.reduce((total, item) => {
         const precio = parseFloat(item.info_producto.precio);
@@ -119,75 +126,72 @@ function calcularTotal() {
     }, 0);
 }
 
-/**
- * Incrementar cantidad de un producto
- */
+// Incrementar cantidad de un producto
 window.incrementarCantidad = async function(itemId, cantidadActual, stock) {
     if (cantidadActual >= stock) {
         Swal.fire({
             icon: 'warning',
             title: 'Stock insuficiente',
-            text: `Solo hay ${stock} unidades disponibles`,
-            ...getSwalConfig()
+            text: `Solo hay ${stock} unidades disponibles`
         });
         return;
     }
     
-    try {
-        await actualizarCantidad(itemId, cantidadActual + 1);
+    const resultado = await updateCartItem(itemId, cantidadActual + 1);
+    
+    if (resultado.success) {
         await cargarCarrito();
-    } catch (error) {
-        console.error('Error al incrementar cantidad:', error);
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: resultado.error
+        });
     }
 };
 
-/**
- * Decrementar cantidad de un producto
- */
+// Decrementar cantidad de un producto
 window.decrementarCantidad = async function(itemId, cantidadActual) {
     if (cantidadActual <= 1) {
-        // Si la cantidad es 1, preguntar si quiere eliminar
         const result = await Swal.fire({
             icon: 'question',
             title: '¿Eliminar producto?',
             text: 'La cantidad mínima es 1. ¿Deseas eliminar este producto del carrito?',
             showCancelButton: true,
             confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
-            ...getSwalConfig()
+            cancelButtonText: 'Cancelar'
         });
         
         if (result.isConfirmed) {
-            try {
-                await eliminarDelCarrito(itemId);
+            const resultado = await removeFromCart(itemId);
+            
+            if (resultado.success) {
                 await cargarCarrito();
-                
                 Swal.fire({
                     icon: 'success',
                     title: 'Producto eliminado',
-                    text: 'El producto ha sido eliminado del carrito',
                     timer: 2000,
-                    showConfirmButton: false,
-                    ...getSwalConfig()
+                    showConfirmButton: false
                 });
-            } catch (error) {
-                console.error('Error al eliminar producto:', error);
             }
         }
         return;
     }
     
-    try {
-        await actualizarCantidad(itemId, cantidadActual - 1);
+    const resultado = await updateCartItem(itemId, cantidadActual - 1);
+    
+    if (resultado.success) {
         await cargarCarrito();
-    } catch (error) {
-        console.error('Error al decrementar cantidad:', error);
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: resultado.error
+        });
     }
 };
 
-/**
- * Eliminar item del carrito
- */
+// Eliminar item del carrito
 window.eliminarItem = async function(itemId, nombreProducto) {
     const result = await Swal.fire({
         icon: 'warning',
@@ -196,48 +200,38 @@ window.eliminarItem = async function(itemId, nombreProducto) {
         showCancelButton: true,
         confirmButtonText: 'Sí, eliminar',
         cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#d01110',
-        ...getSwalConfig()
+        confirmButtonColor: '#d01110'
     });
     
     if (result.isConfirmed) {
-        try {
-            await eliminarDelCarrito(itemId);
+        const resultado = await removeFromCart(itemId);
+        
+        if (resultado.success) {
             await cargarCarrito();
-            
             Swal.fire({
                 icon: 'success',
                 title: 'Producto eliminado',
-                text: 'El producto ha sido eliminado del carrito',
                 timer: 2000,
                 showConfirmButton: false,
                 toast: true,
-                position: 'top-end',
-                ...getSwalConfig()
+                position: 'top-end'
             });
-        } catch (error) {
-            console.error('Error al eliminar producto:', error);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: resultado.error
+            });
         }
     }
 };
 
-/**
- * Proceder al checkout
- */
+// Proceder al checkout
 window.procederAlCheckout = function() {
     window.location.href = 'pago.html';
 };
 
-/**
- * Escuchar eventos de actualización del carrito
- */
-window.addEventListener('cart-updated', () => {
-    cargarCarrito();
-});
-
-/**
- * Cargar carrito al iniciar
- */
+// Cargar carrito al iniciar
 document.addEventListener('DOMContentLoaded', () => {
     cargarCarrito();
 });
