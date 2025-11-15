@@ -2,6 +2,13 @@ const { pool } = require('../services/dbConnection');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const loginAttempts=new Map();
+
+const MAX_ATTEMPTS=5;
+const LOCKOUT_TIME=5*60*1000;//5minutos
+
+
+
 // Registro de nuevo usuario
 exports.register = async (req, res) => {
     const { nombre, email, password } = req.body;
