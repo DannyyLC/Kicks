@@ -74,6 +74,18 @@ exports.login = async (req, res) => {
         });
     }
 
+    //Verificacion si la cuenta está bloqueada
+    const lockStatus=isAccountLocked(email);
+    if(lockStatus&&lockStatus.locked){
+        const minutes=Math.floor(lookStatus.remainingTime/60);
+        const seconds=lookStatus.remainingTime%60;
+        return res.status(429).json({
+            message: `Cuenta bloqueada. Intente nuevamente en ${minutes} minutos y ${seconds} segundos.`,
+            remainingTime: lookStatus.remainingTime,
+            lockedUntil:Date.now()+(lockStatus.remainingTime*1000)
+        });
+    }
+
     try {
         // Buscar usuario por email
         const [users] = await pool.query(
