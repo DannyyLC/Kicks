@@ -17,6 +17,29 @@ setInterval(()=>{
     }
 },60000);//limpiar cada minuto
 
+//Función para verificar si una cuenta está bloqueada
+const isAccountLocked=(email)=>{
+    const attemptData=loginAttempts.get(email);
+    if(!attemptData)return false;
+
+    const now=Date.now();
+    if(attemptData.lockedUntil&&now<attemptData.lockedUntil){
+        return{
+            locked:true,
+            remainingTime:Math.ceil((attemptData.lockedUntil-now)/1000)
+        };
+    }
+
+    //Si el tempo de bloqueo ha pasado, reiniciar los intentos
+    if(attemptData.lockedUntil&&now>=attemptData.lockedUntil){
+        loginAttempts.delete(email);
+        return false;
+    }
+
+    return false;
+
+};
+
 // Registro de nuevo usuario
 exports.register = async (req, res) => {
     const { nombre, email, password } = req.body;
