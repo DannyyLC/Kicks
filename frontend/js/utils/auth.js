@@ -1,4 +1,4 @@
-import { API_URL, API_ENDPOINTS } from '../config.js';
+import { API_URL, API_ENDPOINTS } from '../api/config.js';
 
 // Variable temporal en memoria para el usuario actual
 let currentUser = null;
@@ -31,8 +31,17 @@ export async function isAuthenticated() {
 }
 // Verificar si el usuario es admin
 export async function isAdmin() {
+    if (currentUser) {
+        return currentUser.rol === 1;
+    }
+    
     const response = await getProfile();
-    return response.user && response.user.rol === 1;
+    if (response.success) {
+        currentUser = response.user;
+        return response.user.rol === 1;
+    }
+    
+    return false;
 }
 // Redirigir si no esta autenticado
 export async function protectPage() {
@@ -59,6 +68,15 @@ export async function protectAdminPage() {
     
     if (!admin) {
         // Está autenticado pero no es admin, redirigir al home
+        const pathToRoot = getPathToRoot();
+        window.location.href = `${pathToRoot}index.html`;
+    }
+}
+// Redirigir de paginas de login y registro si ya estas autenticado
+export async function redirectIfAuthenticated() {
+    const authenticated = await isAuthenticated();
+    
+    if (authenticated) {
         const pathToRoot = getPathToRoot();
         window.location.href = `${pathToRoot}index.html`;
     }
@@ -872,13 +890,8 @@ export async function peticionAPI(endpoint, method = 'GET', body = null, esperaA
             if (!response.ok) {
                 if (response.status === 401) {
                     console.warn('Token inválido o expirado');
-                    const currentPath = window.location.pathname;
-                    const isInLogin = currentPath.includes('login.html');
-                    const isInHome = currentPath.endsWith('index.html') || currentPath.endsWith('/');
-                    
-                    if (!isInLogin && !isInHome) {
-                        setTimeout(() => window.location.reload(), 100);
-                    }
+                    // Limpiar el usuario actual para evitar bucles
+                    currentUser = null;
                 }
                 
                 return {
