@@ -1,4 +1,4 @@
-export const API_URL = 'http://localhost:3000/api';
+export const API_URL = 'http://127.0.0.1:3000/api';
 
 export const API_ENDPOINTS = {
   // Auth
@@ -25,6 +25,7 @@ export const API_ENDPOINTS = {
   CART: {
     BASE: '/cart',
     DELETE_ITEM: (itemId) => `/cart/${itemId}`,
+    UPDATE_ITEM: (itemId) => `/cart/${itemId}`,
   },
   
   // Órdenes

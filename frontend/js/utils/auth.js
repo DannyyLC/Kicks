@@ -492,9 +492,11 @@ export async function getCart() {
         );
         
         if (response.ok) {
+            const cartData = Array.isArray(response) ? response : 
+                           (response.cart || response.data || []);
             return { 
                 success: true, 
-                cart: response 
+                cart: cartData 
             };
         } else {
             return { 
@@ -527,6 +529,33 @@ export async function addToCart(productId, cantidad) {
             return { 
                 success: false, 
                 error: response.error || 'Error al agregar al carrito' 
+            };
+        }
+    } catch(error) {
+        return { 
+            success: false, 
+            error: 'Error de conexión con el servidor' 
+        };
+    }
+}
+// Actualizar cantidad de un item en el carrito
+export async function updateCartItem(itemId, cantidad) {
+    try {
+        const response = await peticionAPI(
+            API_ENDPOINTS.CART.UPDATE_ITEM(itemId),
+            'PUT',
+            { cantidad }
+        );
+        
+        if (response.ok) {
+            return { 
+                success: true,
+                item: response
+            };
+        } else {
+            return { 
+                success: false, 
+                error: response.error || 'Error al actualizar cantidad' 
             };
         }
     } catch(error) {
