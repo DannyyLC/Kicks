@@ -48,3 +48,31 @@
     height: auto;
     max-width: 600px;
 }
+
+@media (max-width: 768px) {
+  .nosotros-page {
+    padding: 100px 0 60px;
+  }
+
+  .nosotros-page .container {
+    padding: 0 20px;
+  }
+
+  .historia-title {
+    font-size: 2.5rem;
+  }
+
+  .historia-subtitle {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nosotros-page .container {
+    padding: 0 16px;
+  }
+
+  .historia-title {
+    font-size: 2rem;
+  }
+}
