@@ -1,5 +1,9 @@
 /* Página de Nosotros */
 
+.red-five {
+    color: #d01110;
+}
+
 .nosotros-page {
   min-height: 50vh;
   padding: 20px 0 20px;
