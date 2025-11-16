@@ -1,0 +1,50 @@
+/* Página de Nosotros */
+
+.nosotros-page {
+  min-height: 50vh;
+  padding: 20px 0 20px;
+  background-color: var(--color-fondo);
+}
+
+.nosotros-page .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.nuestra-historia {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.historia-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-texto);
+  margin-bottom: 12px;
+}
+
+.historia-subtitle {
+  font-size: 1.2rem;
+  color: var(--color-texto);
+}
+
+.hero-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-image-placeholder {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-logo-img {
+    width: 100%;
+    height: auto;
+    max-width: 600px;
+}
