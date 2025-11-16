@@ -1,26 +1,23 @@
 /* ============================================
-   CAROUSEL SECTION
-   ============================================ */
+  CAROUSEL SECTION
+============================================ */
 .carousel {
   position: relative;
   width: 100%;
   overflow: hidden;
   margin-top: 0px;
 }
-
 .carousel-container {
   position: relative;
   width: 100%;
   height: 90vh;
   min-height: 500px;
 }
-
 .carousel-slides {
   position: relative;
   width: 100%;
   height: 100%;
 }
-
 .carousel-slide {
   position: absolute;
   top: 0;
@@ -33,12 +30,10 @@
   align-items: center;
   justify-content: center;
 }
-
 .carousel-slide.active {
   opacity: 1;
   z-index: 1;
 }
-
 .carousel-overlay {
   position: absolute;
   top: 0;
@@ -48,7 +43,6 @@
   background: linear-gradient(135deg, rgba(18, 17, 16, 0.8) 0%, rgba(208, 17, 16, 0.3) 100%);
   z-index: 1;
 }
-
 .carousel-content {
   position: relative;
   z-index: 2;
@@ -56,7 +50,6 @@
   max-width: 800px;
   padding: 40px 20px;
 }
-
 .carousel-title {
   font-size: 3.5rem;
   font-weight: 700;
@@ -65,7 +58,6 @@
   line-height: 1.2;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
-
 .carousel-subtitle {
   font-size: 1.5rem;
   color: var(--color-blanco);
@@ -73,14 +65,12 @@
   font-weight: 300;
   opacity: 0.95;
 }
-
 .carousel-buttons {
   display: flex;
   gap: 20px;
   justify-content: center;
   flex-wrap: wrap;
 }
-
 .btn-carousel {
   padding: 16px 32px;
   font-size: 1.1rem;
@@ -88,18 +78,15 @@
   text-decoration: none;
   display: inline-block;
 }
-
 .btn-secondary {
   background-color: transparent;
   color: var(--color-blanco);
   border: 2px solid var(--color-blanco);
 }
-
 .btn-secondary:hover {
   background-color: var(--color-blanco);
   color: var(--color-negro);
 }
-
 .carousel-image {
   position: absolute;
   top: 0;
@@ -109,21 +96,13 @@
   z-index: 0;
 }
 
-.carousel-placeholder {
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
 /* Controles del Carousel */
 .carousel-control {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   z-index: 3;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.01);
   color: var(--color-blanco);
   border: none;
   width: 50px;
@@ -133,19 +112,14 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
+  transition: all 0.5s ease;
 }
-
 .carousel-control:hover {
-  background-color: rgba(255, 255, 255, 0.5);
-  transform: translateY(-50%) scale(1.1);
+  background-color: rgba(255, 255, 255, 0.05);
 }
-
 .carousel-control-prev {
   left: 20px;
 }
-
 .carousel-control-next {
   right: 20px;
 }
@@ -155,12 +129,10 @@
   position: absolute;
   bottom: 30px;
   left: 50%;
-  transform: translateX(-50%);
   z-index: 3;
   display: flex;
   gap: 12px;
 }
-
 .carousel-indicator {
   width: 12px;
   height: 12px;
@@ -170,12 +142,10 @@
   cursor: pointer;
   transition: all 0.3s ease;
 }
-
 .carousel-indicator:hover {
   background-color: rgba(255, 255, 255, 0.7);
   transform: scale(1.2);
 }
-
 .carousel-indicator.active {
   background-color: var(--color-acento);
   width: 30px;
@@ -192,8 +162,8 @@
 }
 
 /* ============================================
-   SECTION TITLES
-   ============================================ */
+  SECTION TITLES
+============================================ */
 .section-title {
   font-size: 2.5rem;
   font-weight: 700;
@@ -201,7 +171,6 @@
   margin-bottom: 40px;
   text-align: center;
 }
-
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -210,7 +179,6 @@
   flex-wrap: wrap;
   gap: 20px;
 }
-
 .section-link {
   color: var(--color-acento);
   text-decoration: none;
@@ -218,7 +186,6 @@
   font-size: 1.1rem;
   transition: opacity 0.3s ease;
 }
-
 .section-link:hover {
   opacity: 0.8;
 }
@@ -230,13 +197,11 @@
   padding: 80px 0;
   background-color: var(--color-fondo);
 }
-
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 30px;
 }
-
 .category-card {
   background-color: var(--color-fondo);
   border: 2px solid var(--color-input-border);
@@ -245,13 +210,11 @@
   transition: all 0.3s ease;
   cursor: pointer;
 }
-
 .category-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
   border-color: var(--color-acento);
 }
-
 .category-image {
   width: 100%;
   height: 250px;
@@ -259,21 +222,6 @@
   background-color: var(--color-input-bg);
   position: relative;
 }
-
-.category-placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, var(--color-input-bg) 0%, var(--color-input-border) 100%);
-  background-image: url('../assets/images/category-placeholder.jpg');
-  background-size: cover;
-  background-position: center;
-  transition: transform 0.3s ease;
-}
-
-.category-card:hover .category-placeholder {
-  transform: scale(1.1);
-}
-
 .category-name {
   font-size: 1.5rem;
   font-weight: 600;
@@ -281,7 +229,6 @@
   padding: 20px;
   margin: 0;
 }
-
 .category-link {
   display: block;
   padding: 0 20px 20px;
@@ -290,25 +237,22 @@
   font-weight: 500;
   transition: opacity 0.3s ease;
 }
-
 .category-link:hover {
   opacity: 0.8;
 }
 
 /* ============================================
-   FEATURED PRODUCTS SECTION
-   ============================================ */
+  FEATURED PRODUCTS SECTION
+============================================ */
 .featured-products {
   padding: 80px 0;
   background-color: var(--color-input-bg);
 }
-
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 30px;
 }
-
 .product-card {
   background-color: var(--color-fondo);
   border-radius: 16px;
@@ -316,12 +260,10 @@
   transition: all 0.3s ease;
   border: 1px solid var(--color-input-border);
 }
-
 .product-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
-
 .product-image {
   width: 100%;
   height: 300px;
@@ -329,21 +271,6 @@
   overflow: hidden;
   background-color: var(--color-input-bg);
 }
-
-.product-placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, var(--color-input-bg) 0%, var(--color-input-border) 100%);
-  background-image: url('../assets/images/product-placeholder.jpg');
-  background-size: cover;
-  background-position: center;
-  transition: transform 0.3s ease;
-}
-
-.product-card:hover .product-placeholder {
-  transform: scale(1.05);
-}
-
 .product-badge {
   position: absolute;
   top: 15px;
@@ -355,28 +282,20 @@
   font-size: 0.85rem;
   font-weight: 600;
 }
-
-.product-badge-sale {
-  background-color: var(--color-acento);
-}
-
 .product-info {
   padding: 20px;
 }
-
 .product-name {
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--color-texto);
   margin-bottom: 8px;
 }
-
 .product-category {
   font-size: 0.9rem;
   color: var(--color-secundario);
   margin-bottom: 16px;
 }
-
 .product-footer {
   display: flex;
   justify-content: space-between;
@@ -388,19 +307,16 @@
   flex-direction: column;
   gap: 4px;
 }
-
 .product-price {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-texto);
 }
-
 .product-price-old {
   font-size: 1rem;
   color: var(--color-secundario);
   text-decoration: line-through;
 }
-
 .product-cart-btn {
   background-color: var(--color-acento);
   color: var(--color-blanco);
@@ -414,7 +330,6 @@
   cursor: pointer;
   transition: all 0.3s ease;
 }
-
 .product-cart-btn:hover {
   background-color: #b00f0e;
   transform: scale(1.1);
@@ -422,30 +337,23 @@
 
 /* ============================================
    BRANDS SECTION
-   ============================================ */
+============================================ */
 .brands {
   padding: 80px 0;
   background-color: var(--color-fondo);
   overflow: hidden;
 }
-
 .brands-carousel-wrapper {
   margin-top: 40px;
   overflow: hidden;
   position: relative;
 }
-
 .brands-carousel {
   display: flex;
   gap: 60px;
   animation: scrollBrands 30s linear infinite;
   width: fit-content;
 }
-
-.brands-carousel:hover {
-  animation-play-state: paused;
-}
-
 @keyframes scrollBrands {
   0% {
     transform: translateX(0);
@@ -454,7 +362,6 @@
     transform: translateX(-50%);
   }
 }
-
 .brand-item {
   display: flex;
   align-items: center;
@@ -465,12 +372,10 @@
   flex-shrink: 0;
   min-width: 150px;
 }
-
 .brand-item:hover {
   opacity: 1;
   transform: scale(1.1);
 }
-
 .brand-logo {
   max-width: 120px;
   max-height: 60px;
@@ -480,20 +385,18 @@
   filter: grayscale(100%);
   transition: filter 0.3s ease;
 }
-
 .brand-item:hover .brand-logo {
   filter: grayscale(0%);
 }
 
 /* ============================================
-   PRODUCTS LOADING
-   ============================================ */
+  PRODUCTS LOADING
+============================================ */
 .products-loading {
   grid-column: 1 / -1;
   text-align: center;
   padding: 60px 20px;
 }
-
 .loading-spinner {
   width: 50px;
   height: 50px;
@@ -503,33 +406,27 @@
   animation: spin 1s linear infinite;
   margin: 0 auto 20px;
 }
-
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
 .products-loading p {
   color: var(--color-secundario);
   font-size: 1.1rem;
 }
-
 .products-error {
   grid-column: 1 / -1;
   text-align: center;
   padding: 60px 20px;
 }
-
 .products-error p {
   color: var(--color-secundario);
   font-size: 1.1rem;
   margin-bottom: 20px;
 }
-
 .products-error .btn {
   margin-top: 20px;
 }
-
 .products-empty {
   grid-column: 1 / -1;
   text-align: center;
@@ -539,16 +436,14 @@
 }
 
 /* ============================================
-   PRODUCT CARD - ESTADOS ADICIONALES
-   ============================================ */
+  PRODUCT CARD - ESTADOS ADICIONALES
+============================================ */
 .product-card--out-of-stock {
   opacity: 0.7;
 }
-
 .product-card--out-of-stock .product-image {
   position: relative;
 }
-
 .product-card--out-of-stock .product-image::after {
   content: '';
   position: absolute;
@@ -559,38 +454,31 @@
   background: rgba(0, 0, 0, 0.4);
   z-index: 1;
 }
-
 .product-badge--new {
   background-color: #4CAF50;
 }
-
 .product-badge--sold-out {
   background-color: #757575;
   z-index: 2;
 }
-
 .product-placeholder-bg {
   background: linear-gradient(135deg, var(--color-input-bg) 0%, var(--color-input-border) 100%);
   width: 100%;
   height: 100%;
 }
-
 .product-cart-btn--disabled {
   background-color: var(--color-gris);
   cursor: not-allowed;
   opacity: 0.6;
 }
-
 .product-cart-btn--disabled:hover {
   background-color: var(--color-gris);
   transform: none;
 }
-
 .product-cart-btn--added {
   background-color: #4CAF50;
   animation: pulse 0.5s ease;
 }
-
 @keyframes pulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.15); }
@@ -603,14 +491,12 @@
   padding: 80px 0;
   background-color: var(--color-input-bg);
 }
-
 .benefits-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 40px;
   margin-top: 40px;
 }
-
 .benefit-item {
   text-align: center;
   padding: 30px 20px;
@@ -619,13 +505,11 @@
   border: 1px solid var(--color-input-border);
   transition: all 0.3s ease;
 }
-
 .benefit-item:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   border-color: var(--color-acento);
 }
-
 .benefit-icon {
   margin-bottom: 20px;
   color: var(--color-acento);
@@ -633,19 +517,16 @@
   align-items: center;
   justify-content: center;
 }
-
 .benefit-icon svg {
   width: 48px;
   height: 48px;
 }
-
 .benefit-title {
   font-size: 1.3rem;
   font-weight: 600;
   color: var(--color-texto);
   margin-bottom: 12px;
 }
-
 .benefit-description {
   font-size: 1rem;
   color: var(--color-secundario);
@@ -655,7 +536,7 @@
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media (max-width: 768px) {
+@media (max-width: 850px) {
   .carousel-container {
     height: 60vh;
     min-height: 450px;
@@ -707,8 +588,7 @@
 
   .categories-grid,
   .products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr
   }
 
   .brands-carousel {
