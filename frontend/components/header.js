@@ -1,5 +1,5 @@
 import { cartIcon, userIcon, menuIcon, closeIcon } from '../js/utils/icons.js';
-import { isAuthenticated, logout } from '../js/utils/auth.js';
+import { isAuthenticated, logout, isAdmin } from '../js/utils/auth.js';
 
 /**
  * Detecta la ruta base según la ubicación del archivo
@@ -14,14 +14,13 @@ function getBasePath() {
   return '../';
 }
 
-/**
- * Crea y renderiza el navbar
- */
+// Crea y renderiza el navbar
 export async function Header() {
   const header = document.createElement('header');
   header.className = 'navbar';
   
   const isLoggedIn = await isAuthenticated();
+  const isAdminUser = await isAdmin();
   const basePath = getBasePath();
   
   // Detectar tema actual
@@ -48,9 +47,17 @@ export async function Header() {
         <li><a href="${basePath}tienda/preguntas-frecuentes.html" class="nav-link">Preguntas Frecuentes</a></li>
       </ul>
       
-      <!-- Acciones a la derecha -->
+      <!-- Acciones-->
       <div class="navbar-actions">
         ${isLoggedIn ? `
+          ${isAdminUser ? `
+            <a href="${basePath}admin/admin.html" class="navbar-icon-btn btn-admin" aria-lanel="Admin Panel" title="Panel de Administrador">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </a>
+          ` : ''}
           <a href="${basePath}tienda/carrito.html" class="navbar-icon-btn" aria-label="Carrito">
             ${cartIcon}
           </a>
@@ -85,6 +92,17 @@ export async function Header() {
         <li><a href="${basePath}tienda/suscripcion.html" class="mobile-nav-link">Suscripcion</a></li>
         <li><a href="${basePath}tienda/preguntas-frecuentes.html" class="mobile-nav-link">Preguntas Frecuentes</a></li>
         ${isLoggedIn ? `
+          ${isAdminUser ? `
+            <li>
+              <a href="${basePath}admin/admin.html" class="mobile-nav-link mobile-nav-icon" aria-label="Admin">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <span>Panel Admin</span>
+              </a>
+            </li>
+          ` : ''}
           <li>
             <a href="${basePath}tienda/carrito.html" class="mobile-nav-link mobile-nav-icon" aria-label="Carrito">
               ${cartIcon}
@@ -629,7 +647,7 @@ function setupThemeObserver(header, basePath) {
       if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
         const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
         const newLogoSrc = currentTheme === 'dark' 
-          ? `${basePath}assets/img/kicks-logo-white.png` 
+          ? `${basePath}assets/img/kicks_logo_white.png` 
           : `${basePath}assets/img/kicks_logo.png`;
         
         if (logo) {

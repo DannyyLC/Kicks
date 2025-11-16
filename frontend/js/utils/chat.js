@@ -21,6 +21,25 @@ const chatMessages = document.getElementById('chatMessages');
 let conversationHistory = [];
 
 // ============================================
+// CHAT - AUTO-RESIZE DEL TEXTAREA
+// ============================================
+function autoResizeTextarea() {
+    messageInput.style.height = 'auto';
+    messageInput.style.height = messageInput.scrollHeight + 'px';
+}
+
+// Event listener para auto-resize mientras escribes
+messageInput.addEventListener('input', autoResizeTextarea);
+
+// Event listener para permitir Enter para enviar (Shift+Enter para nueva línea)
+messageInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        chatForm.dispatchEvent(new Event('submit'));
+    }
+});
+
+// ============================================
 // CHAT - ABRIR Y CERRAR MODAL
 // ============================================
 function openChatModal() {
@@ -67,7 +86,7 @@ function loadChatHistory() {
         // Si no hay historial, crear mensaje de bienvenida
         const welcomeMessage = {
             role: 'assistant',
-            content: '¡Hola! Soy Kicksy tu asistente personal de Kicks. ¿En qué puedo ayudarte hoy?'
+            content: '¡Hola! 👋 Soy Kicksy, tu asistente en Kicks. ¿En qué puedo ayudarte hoy?'
         };
         
         // Agregar al historial
@@ -143,9 +162,21 @@ function scrollToBottom() {
 // ============================================
 // CHAT - LIMPIAR CONVERSACIÓN
 // ============================================
-function clearConversation() {
-    // Preguntar confirmación al usuario
-    if (confirm('¿Estás seguro de que quieres borrar toda la conversación?')) {
+async function clearConversation() {
+    // Preguntar confirmación al usuario con SweetAlert
+    const result = await Swal.fire({
+        title: '¿Eliminar conversación?',
+        text: '¿Estás seguro de que quieres borrar toda la conversación? Esta acción no se puede deshacer.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#d01110',
+        cancelButtonColor: '#6c757d',
+        reverseButtons: true
+    });
+    
+    if (result.isConfirmed) {
         // Limpiar historial
         conversationHistory = [];
         
@@ -155,7 +186,17 @@ function clearConversation() {
         // Limpiar UI
         chatMessages.innerHTML = '';
         
+        // Mostrar mensaje de éxito
+        await Swal.fire({
+            title: '¡Eliminado!',
+            text: 'La conversación ha sido eliminada.',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+        });
+        
         console.log('Conversación limpiada');
+        loadChatHistory();
     }
 }
 
@@ -175,6 +216,9 @@ async function sendMessage(e) {
     
     // Limpiar el input
     messageInput.value = '';
+    
+    // Resetear altura del textarea
+    messageInput.style.height = 'auto';
     
     // Mostrar mensaje del usuario
     addMessageToUI(userMessage, 'user');
