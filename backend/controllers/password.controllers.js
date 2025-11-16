@@ -284,3 +284,43 @@ exports.resetPasswordWithCode = async (req, res) => {
         });
     }
 };
+
+// Verificar si un código es válido (sin cambiar la contraseña)
+exports.verifyCode = async (req, res) => {
+    const { email, code } = req.body;
+
+    if (!email || !code) {
+        return res.status(400).json({ 
+            message: "Email y código son obligatorios" 
+        });
+    }
+
+    const recoveryData = recoveryCodes.get(email);
+
+    if (!recoveryData) {
+        return res.status(400).json({ 
+            valid: false,
+            message: "Código no encontrado" 
+        });
+    }
+
+    if (Date.now() > recoveryData.expiresAt) {
+        recoveryCodes.delete(email);
+        return res.status(400).json({ 
+            valid: false,
+            message: "Código expirado" 
+        });
+    }
+
+    if (recoveryData.code === code) {
+        return res.json({ 
+            valid: true,
+            message: "Código válido" 
+        });
+    } else {
+        return res.status(400).json({ 
+            valid: false,
+            message: "Código incorrecto" 
+        });
+    }
+};
