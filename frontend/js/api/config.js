@@ -7,7 +7,9 @@ export const API_ENDPOINTS = {
     REGISTER: '/auth/register',
     LOGOUT: '/auth/logout',
     PERFIL: '/auth/perfil',
-    CAMBIAR_PASSWORD: '/auth/cambiar-contrasena',
+    CORREO_RECUPERACION: '/password/request-reset',
+    REESTABLECER_CONTRASENA: '/password/reset',
+    VERIFICAR_CODIGO: '/password/verify-code',
   },
   
   // Productos
@@ -43,7 +45,12 @@ export const API_ENDPOINTS = {
     GENERATE: '/captcha/generate',
     VALIDATE: '/captcha/validate',
   },
-  
+
+  // Asistente Inteligente
+  AI: {
+    ASSISTANT: '/ai/chat',
+  },
+
   // Otros
   SUSCRIPCION: '/suscripcion',
   CONTACT: '/contact',
