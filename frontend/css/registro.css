@@ -134,6 +134,50 @@
 }
 
 /* ============================================
+   CAPTCHA
+   ============================================ */
+.captcha-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.captcha-image {
+  flex: 1;
+  height: 60px;
+  border: 2px solid var(--color-input-border);
+  border-radius: 8px;
+  background-color: var(--color-input-bg);
+  object-fit: contain;
+  padding: 4px;
+}
+
+.btn-refresh-captcha {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background-color: var(--color-acento);
+  color: var(--color-blanco);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.btn-refresh-captcha:hover {
+  background-color: #b00f0e;
+  transform: rotate(180deg);
+}
+
+.btn-refresh-captcha:active {
+  transform: rotate(180deg) scale(0.95);
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {

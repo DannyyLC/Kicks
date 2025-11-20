@@ -34,7 +34,7 @@ app.use(cors({
     optionsSuccessStatus: 200
 }));
 
-app.get("api/health", (_req, res) => res.json({ ok: true }));
+app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/products", productsRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/ordenes", ordenesRoutes);
