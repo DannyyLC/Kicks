@@ -261,7 +261,7 @@ function renderizarImagenesExistentes() {
     
     container.innerHTML = imagenesExistentes.map((imagen, index) => `
         <div class="image-preview-item" data-image-id="${imagen.id}">
-            <img src="${obtenerUrlImagen(imagen.url)}" alt="Imagen ${index + 1}">
+            <img src="${obtenerUrlImagen(imagen.url_imagen)}" alt="Imagen ${index + 1}">
             <button type="button" class="remove-image" onclick="eliminarImagenExistente(${imagen.id})" title="Eliminar imagen">
                 X
             </button>
