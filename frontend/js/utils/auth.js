@@ -621,6 +621,30 @@ export async function getCart() {
         };
     }
 }
+export async function countCart() {
+    try {
+        const response = await peticionAPI(
+            API_ENDPOINTS.CART.COUNT,
+            'GET'
+        );
+        if (response.ok) {
+            return { 
+                success: true, 
+                itemCount: response.count 
+            };
+        } else {
+            return { 
+                success: false, 
+                error: response.error || 'Error al contar items del carrito' 
+            };
+        }
+    } catch(error) {
+        return { 
+            success: false, 
+            error: 'Error de conexión con el servidor' 
+        };
+    }
+}
 // Agregar producto al carrito
 export async function addToCart(productId, cantidad) {
     try {
@@ -631,6 +655,7 @@ export async function addToCart(productId, cantidad) {
         );
         
         if (response.ok) {
+            document.dispatchEvent(new CustomEvent('cartUpdated'));
             return { 
                 success: true, 
                 item: response 
@@ -658,6 +683,7 @@ export async function updateCartItem(itemId, cantidad) {
         );
         
         if (response.ok) {
+            document.dispatchEvent(new CustomEvent('cartUpdated'));
             return { 
                 success: true,
                 item: response
@@ -684,6 +710,7 @@ export async function removeFromCart(itemId) {
         );
         
         if (response.ok) {
+            document.dispatchEvent(new CustomEvent('cartUpdated'));
             return { 
                 success: true 
             };
@@ -714,6 +741,7 @@ export async function createOrder(orderData) {
         );
         
         if (response.ok) {
+            document.dispatchEvent(new CustomEvent('cartUpdated'));
             return { 
                 success: true, 
                 orderId: response.orderId 

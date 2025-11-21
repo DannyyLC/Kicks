@@ -8,7 +8,6 @@ import {
     protectPage,
     verifyCoupon
 } from './utils/auth.js';
-import { API_URL } from './utils/config.js';
 
 // ============================================
 // Variables Globales

@@ -26,6 +26,7 @@ export const API_ENDPOINTS = {
   // Carrito
   CART: {
     BASE: '/cart',
+    COUNT: '/cart/count',    
     DELETE_ITEM: (itemId) => `/cart/${itemId}`,
     UPDATE_ITEM: (itemId) => `/cart/${itemId}`,
   },
