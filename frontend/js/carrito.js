@@ -8,9 +8,7 @@ async function cargarCarrito() {
     const container = document.getElementById('cart-content');
     
     try {
-        console.log('Cargando carrito...');
         const resultado = await getCart();
-        console.log('Carrito obtenido:', resultado);
         
         if (resultado.success) {
             carritoItems = resultado.cart;

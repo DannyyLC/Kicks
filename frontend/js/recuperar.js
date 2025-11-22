@@ -671,7 +671,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Setup de mejoras UX
   setupPasswordToggles();
   
-  console.log('Sistema de recuperación de contraseña inicializado');
 });
 
 // Limpiar estado si el usuario cierra la ventana/pestaña

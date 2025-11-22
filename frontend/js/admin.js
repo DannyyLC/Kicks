@@ -447,11 +447,16 @@ function removerImagenSeleccionadaHandler(index) {
 // ============================================
 async function enviarFormulario(event) {
     event.preventDefault();
+    event.stopPropagation();
+
+    const submitBtn = document.getElementById('submit-btn');
+    if (submitBtn.disabled) {
+        return;
+    }
     
     const productId = document.getElementById('product-id').value;
     const isEditing = !!productId;
     
-    const submitBtn = document.getElementById('submit-btn');
     submitBtn.disabled = true;
     submitBtn.textContent = isEditing ? 'Actualizando...' : 'Creando...';
     
@@ -643,9 +648,6 @@ async function cargarEstadisticas() {
                 }
             }
         }
-
-        console.log('Total Ventas:', totalVentas);
-        console.log('Ventas por Categoría:', ventasPorCategoria);
 
         // Actualizar cards
         actualizarCards(totalVentas, ventasPorCategoria);
@@ -902,7 +904,6 @@ window.loadProducts = cargarProductos;
 window.openCreateModal = abrirModalCrear;
 window.openEditModal = abrirModalEditar;
 window.closeModal = cerrarModal;
-window.handleSubmit = enviarFormulario;
 window.deleteProduct = eliminarProductoHandler;
 window.handleImageSelect = seleccionarImagenes;
 window.eliminarImagenExistente = eliminarImagenExistenteHandler;
@@ -922,6 +923,8 @@ async function inicializarPagina() {
         
         // Renderizar Theme Toggle Button
         ThemeBtn();
+
+        document.getElementById('productForm').addEventListener('submit', enviarFormulario);
 
         // Cargar estadísticas
         await cargarEstadisticas();

@@ -34,8 +34,6 @@ export function ProductCard(producto) {
   const imagenPath = imagenCompleta || imagen;
   const imagenUrl = obtenerUrlImagen(imagenPath);
 
-  console.log('Imagen URL del producto:', imagenUrl);
-  
   // Convertir precio y descuento a números (vienen como strings de MySQL)
   const precioOriginal = parseFloat(precio);
   const descuentoNum = parseFloat(descuento);

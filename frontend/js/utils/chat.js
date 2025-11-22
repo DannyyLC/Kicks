@@ -195,7 +195,6 @@ async function clearConversation() {
             showConfirmButton: false
         });
         
-        console.log('Conversación limpiada');
         loadChatHistory();
     }
 }

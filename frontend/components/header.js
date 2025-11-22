@@ -656,14 +656,6 @@ function setupMenuActions(menu) {
       const action = e.currentTarget.dataset.action;
       
       switch(action) {
-        case 'profile':
-          // TODO: Redirigir a perfil de usuario
-          console.log('Ir a perfil');
-          break;
-        case 'orders':
-          // TODO: Redirigir a pedidos
-          console.log('Ir a mis pedidos');
-          break;
         case 'logout':
           const result = await Swal.fire({
             title: '¿Cerrar sesión?',
