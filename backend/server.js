@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Servir archivos estáticos desde la carpeta uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(cors({
     origin: ['https://kicks-zeta.vercel.app', 'http://158.23.87.197'], 
@@ -34,7 +34,7 @@ app.use(cors({
     optionsSuccessStatus: 200
 }));
 
-app.get("api/health", (_req, res) => res.json({ ok: true }));
+app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/products", productsRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/ordenes", ordenesRoutes);
