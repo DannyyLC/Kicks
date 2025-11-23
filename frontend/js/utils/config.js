@@ -1,4 +1,4 @@
-export const API_URL = 'https://kicksbackend-production.up.railway.app/api';
+export const API_URL = 'http://158.23.87.197:3000/api';
 
 export const API_ENDPOINTS = {
   // Auth
