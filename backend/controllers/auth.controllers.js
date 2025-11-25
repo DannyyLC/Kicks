@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const loginAttempts=new Map();
 
-const MAX_ATTEMPTS=5;
+const MAX_ATTEMPTS=3;
 const LOCKOUT_TIME=5*60*1000;//5minutos (en milisegundos)
 
 //Funcion para limpiar intentos antiguos periódicamente
