@@ -2,10 +2,10 @@ const { pool } = require('../services/dbConnection');
 const ProductModel = require('../models/ProductModel');
 
 exports.getAllProducts = async (req, res) => {
-    const { categoria, hasDescuento } = req.query;
+    const { categoria, hasDescuento, precioMin, precioMax } = req.query;
 
     try {
-        const rows = await ProductModel.getAllProducts(categoria, hasDescuento);
+        const rows = await ProductModel.getAllProducts(categoria, hasDescuento, precioMin, precioMax);
         
         // Obtener la primera imagen para cada producto
         const productosConImagen = await Promise.all(rows.map(async (producto) => {

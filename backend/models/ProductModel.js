@@ -39,11 +39,36 @@ const getProductStock = async (productId) => {
     }
 };
 
-const getAllProducts = async (categoria, hasDescuento) => {
+const getAllProducts = async (categoria, hasDescuento, precioMin, precioMax) => {
     try {
-        const [rows] = await pool.query(`SELECT * FROM productos WHERE estado = 1` +
-            (categoria ? ` AND categoria = ?` : '') +
-            (hasDescuento ? ` AND hasDescuento = ?` : ''), [categoria, hasDescuento].filter(Boolean));
+        let query = 'SELECT * FROM productos WHERE estado = 1';
+        const params = [];
+
+        // Filtro por categoría
+        if (categoria) {
+            query += ' AND categoria = ?';
+            params.push(categoria);
+        }
+
+        // Filtro por descuento - convertir a número
+        if (hasDescuento !== undefined && hasDescuento !== null && hasDescuento !== '') {
+            query += ' AND hasDescuento = ?';
+            params.push(parseInt(hasDescuento));
+        }
+
+        // Filtro por precio mínimo
+        if (precioMin !== undefined && precioMin !== null && precioMin !== '') {
+            query += ' AND precio >= ?';
+            params.push(parseFloat(precioMin));
+        }
+
+        // Filtro por precio máximo
+        if (precioMax !== undefined && precioMax !== null && precioMax !== '') {
+            query += ' AND precio <= ?';
+            params.push(parseFloat(precioMax));
+        }
+
+        const [rows] = await pool.query(query, params);
         return rows;
     } catch (error) {
         console.error("Error en ProductModel.getAllProducts:", error);
