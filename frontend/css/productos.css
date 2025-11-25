@@ -93,6 +93,43 @@
   box-shadow: 0 0 0 3px rgba(208, 17, 16, 0.1);
 }
 
+.filter-input:focus {
+  outline: none;
+  border-color: var(--color-acento);
+  box-shadow: 0 0 0 3px rgba(208, 17, 16, 0.1);
+}
+
+/* ⭐ AGREGAR: Estilos para inputs de precio */
+.filter-input-price {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--color-input-border);
+  border-radius: 12px;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--font-family);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.filter-input-price:focus {
+  outline: none;
+  border-color: var(--color-acento);
+  box-shadow: 0 0 0 3px rgba(208, 17, 16, 0.1);
+}
+
+.filter-input-price::placeholder {
+  color: var(--color-secundario);
+  opacity: 0.6;
+}
+
+/* Remover flechas de number input en Chrome/Safari */
+.filter-input-price::-webkit-outer-spin-button,
+.filter-input-price::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .filter-select {
   padding: 14px 16px;
   border: 2px solid var(--color-input-border);
@@ -145,6 +182,7 @@
   font-size: 0.95rem;
   font-weight: 500;
 }
+
 
 /* ============================================
    GRID DE PRODUCTOS

@@ -1,10 +1,12 @@
 import { cartIcon, userIcon, menuIcon, closeIcon, adminIcon } from '../js/utils/icons.js';
-import { isAuthenticated, logout, isAdmin, countCart } from '../js/utils/auth.js';
+import { isAuthenticated, logout, isAdmin, countCart, getProfile } from '../js/utils/auth.js';
+import { initFontSizeSelector, setupFontSizeSelectors } from './font-size-selector.js'; 
+
 
 /**
  * Detecta la ruta base según la ubicación del archivo
  */
-function getBasePath() {
+export function getBasePath() {
   const path = window.location.pathname;
   // Si estamos en la raíz (index.html) o en frontend/, no usar ../
   if (path === '/' || path.endsWith('/index.html') || path.endsWith('/frontend/') || path.endsWith('/frontend/index.html')) {
@@ -25,6 +27,14 @@ export async function Header() {
   const cartCount = await countCart();
   const cartItemCount = cartCount.success ? cartCount.itemCount : 0;
   const displayCount = cartItemCount > 99 ? '99+' : cartItemCount;
+
+  let userName = 'Usuario';
+  if (isLoggedIn) {
+    const profileResult = await getProfile();
+    if (profileResult.success && profileResult.user.nombre) {
+      userName = profileResult.user.nombre;
+    }
+  }
   
   // Detectar tema actual
   const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
@@ -52,6 +62,16 @@ export async function Header() {
       
       <!-- Acciones-->
       <div class="navbar-actions">
+        <!-- Selector de tamaño de fuente -->
+        <div class="font-size-control">
+          <label for="font-size-desktop" class="sr-only">Tamaño de texto</label>
+          <select id="font-size-desktop" class="font-size-selector">
+            <option value="small">A-</option>
+            <option value="normal">A</option>
+            <option value="large">A+</option>
+            <option value="extra-large">A++</option>
+          </select>
+        </div>
         ${isLoggedIn ? `
           ${isAdminUser ? `
             <a href="${basePath}admin/admin.html" class="navbar-icon-btn btn-admin" aria-lanel="Admin Panel" title="Panel de Administrador">
@@ -62,8 +82,9 @@ export async function Header() {
             ${cartIcon}
             ${cartItemCount > 0 ? `<span class="cart-badge">${cartItemCount}</span>` : ''}
           </a>
-          <button class="navbar-icon-btn" aria-label="Cuenta">
+          <button class="navbar-icon-btn user-btn" aria-label="Cuenta">
             ${userIcon}
+            <span class="user-name">${userName}</span>
           </button>
         ` : `
           <a href="${basePath}cuenta/login.html" class="btn btn-primary btn-login-nav">
@@ -86,6 +107,25 @@ export async function Header() {
           ${closeIcon}
         </button>
       </div>
+
+      <!-- Selector de tamaño para móvil -->
+      <div class="mobile-font-size-control">
+        <label for="font-size-mobile" class="mobile-font-label">Tamaño de texto:</label>
+        <select id="font-size-mobile" class="font-size-selector mobile-font-select">
+          <option value="small">Pequeño (A-)</option>
+          <option value="normal">Normal (A)</option>
+          <option value="large">Grande (A+)</option>
+          <option value="extra-large">Extra Grande (A++)</option>
+        </select>
+      </div>
+
+      ${isLoggedIn ? `
+      <div class="mobile-user-info">
+        ${userIcon}
+        <span class="mobile-user-name">${userName}</span>
+      </div>
+    ` : ''}
+
       <ul class="mobile-nav">
         <li><a href="${basePath}tienda/productos.html" class="mobile-nav-link">Productos</a></li>
         <li><a href="${basePath}tienda/nosotros.html" class="mobile-nav-link">Nosotros</a></li>
@@ -164,6 +204,10 @@ export async function Header() {
   
   // Evento custom
   document.addEventListener('cartUpdated', updateCartBadge);
+
+  initFontSizeSelector();
+
+  setupFontSizeSelectors(header);
   
   return header;
 }
@@ -525,6 +569,122 @@ function addHeaderStyles() {
     .navbar-actions {
       position: relative;
     }
+
+    /* Nombre de usuario en desktop */
+    .user-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--color-texto);
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Info de usuario en móvil */
+    .mobile-user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px;
+      background-color: var(--color-input-bg);
+      border-bottom: 1px solid var(--color-input-border);
+      margin-bottom: 8px;
+    }
+
+    .mobile-user-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--color-texto);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .user-name {
+        display: none;
+      }
+    }
+
+    /* ============================================
+   SELECTOR DE TAMAÑO DE FUENTE
+   ============================================ */
+  /* Desktop */
+  .font-size-control {
+    display: flex;
+    align-items: center;
+  }
+
+  .font-size-selector {
+    padding: 6px 10px;
+    border: 2px solid var(--color-input-border);
+    border-radius: 8px;
+    background-color: var(--color-input-bg);
+    color: var(--color-texto);
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 60px;
+  }
+
+  .font-size-selector:hover {
+    border-color: var(--color-acento);
+  }
+
+  .font-size-selector:focus {
+    outline: none;
+    border-color: var(--color-acento);
+    box-shadow: 0 0 0 3px rgba(208, 17, 16, 0.1);
+  }
+
+  /* Clase para screen readers */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Móvil */
+  .mobile-font-size-control {
+    padding: 16px 20px;
+    background-color: var(--color-input-bg);
+    border-bottom: 1px solid var(--color-input-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .mobile-font-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-texto);
+  }
+
+  .mobile-font-select {
+    flex: 1;
+    max-width: 180px;
+  }
+
+  @media (max-width: 768px) {
+    .font-size-control {
+      display: none;
+    }
+  }
+
   `;
   
   document.head.appendChild(style);
@@ -591,8 +751,7 @@ function setupUserMenu(header) {
   `;
 
   // Encontrar el botón de usuario en desktop y móvil
-  const userBtnDesktop = header.querySelector('.navbar-actions .navbar-icon-btn[aria-label="Cuenta"]');
-  const userBtnMobile = header.querySelector('.mobile-nav-icon[aria-label="Cuenta"]');
+  const userBtnDesktop = header.querySelector('.navbar-actions .user-btn');
 
   // Agregar el menú al navbar-actions
   const navbarActions = header.querySelector('.navbar-actions');

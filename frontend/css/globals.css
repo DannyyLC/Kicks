@@ -50,6 +50,23 @@ GOOGLE FONTS - LEXEND
 }
 
 /* ============================================
+   TAMAÑOS DE TEXTO
+   ============================================ */
+html.text-small { 
+  --font-size-base: 14px; 
+}
+
+html.text-large { 
+  --font-size-base: 18px; 
+}
+
+html.text-extra-large { 
+  --font-size-base: 20px; 
+}
+
+/* Remover las antiguas clases de body */
+
+/* ============================================
    ESTILOS GLOBALES
    ============================================ */
 html {
@@ -62,13 +79,6 @@ body {
   line-height: 1.6;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-
-/* ============================================
-   TAMAÑOS DE TEXTO 
-   ============================================ */
-body.text-small { --font-size-base: 14px; }
-body.text-large { --font-size-base: 18px; }
-body.text-extra-large { --font-size-base: 20px; }
 
 /* ============================================
    UTILIDADES 
