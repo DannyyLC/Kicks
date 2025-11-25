@@ -2,7 +2,7 @@ const { pool } = require('../services/dbConnection');
 const ProductModel = require('../models/ProductModel');
 
 exports.getAllProducts = async (req, res) => {
-    const { categoria, hasDescuento, precioMin, precioMax } = req.query;
+    const { categoria, hasDescuento, precioMin, precioMax } = req.body;
 
     try {
         const rows = await ProductModel.getAllProducts(categoria, hasDescuento, precioMin, precioMax);
