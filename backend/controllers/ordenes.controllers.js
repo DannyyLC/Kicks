@@ -4,8 +4,7 @@ const { generarReciboPDF } = require('../services/generadorRecibos');
 const OrderModel = require('../models/OrderModel');
 
 exports.createOrder = async (req, res) => {
-    //const userId  = req.userId;
-    const userId = 1; // Temporalmente fijo para pruebas
+    const userId  = req.userId;
     const userEmail = req.userEmail;
 
     const { metodo_pago, nombre_envio, direccion_envio, ciudad, codigo_postal, telefono, pais, cupon, datos_pago } = req.body;
@@ -129,6 +128,7 @@ exports.createOrder = async (req, res) => {
         // Enviar email con PDF
         await sendMailWithPdf({
             to: userEmail,
+            text: `Gracias por tu compra. Adjuntamos el recibo de la orden #${orderId}.`,            
             subject: 'Confirmación de tu orden en KICKS',
             pdfPath: pdfPath,
             pdfName: `Recibo_Orden_${orderId}.pdf`

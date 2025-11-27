@@ -2,8 +2,7 @@ const CartModel = require('../models/CartModel');
 const ProductModel = require('../models/ProductModel');
 
 exports.getCartItemCount = async (req, res) => {
-    //const userId  = req.userId;
-    const userId = 1; // Temporalmente fijo para pruebas
+    const userId = req.userId;
 
     try {
         const count = await CartModel.getCartItemCount(userId);
@@ -15,8 +14,7 @@ exports.getCartItemCount = async (req, res) => {
 };
 
 exports.getCartByUserId = async (req, res) => {
-    //const userId  = req.userId;
-    const userId = 1; // Temporalmente fijo para pruebas
+    const userId = req.userId;
 
     try {
         const rows = await CartModel.getCartItemsByUserId(userId);
@@ -39,8 +37,7 @@ exports.getCartByUserId = async (req, res) => {
 }
 
 exports.addItemToCart = async (req, res) => {
-    //const userId  = req.userId;
-    const userId = 1; // Temporalmente fijo para pruebas
+    const userId = req.userId;
 
     const { productId, cantidad } = req.body;
     
@@ -80,8 +77,7 @@ exports.addItemToCart = async (req, res) => {
 }
 
 exports.removeItemFromCart = async (req, res) => {
-    //const userId  = req.userId;
-    const userId = 1; // Temporalmente fijo para pruebas
+    const userId = req.userId;
 
     const { itemId } = req.params;
     
@@ -98,8 +94,7 @@ exports.removeItemFromCart = async (req, res) => {
 }
 
 exports.updateItemQuantity = async (req, res) => {
-    //const userId  = req.userId;
-    const userId = 1; // Temporalmente fijo para pruebas
+    const userId = req.userId;
 
     const { itemId } = req.params;
     const { cantidad } = req.body;
