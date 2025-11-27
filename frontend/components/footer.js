@@ -98,7 +98,7 @@ export function Footer() {
     <div class="footer-bottom">
       <div class="footer-bottom-container">
         <p class="footer-copyright">
-          &copy; ${new Date().getFullYear()} KICKS. Todos los derechos reservados.
+          &copy; ${new Date().getFullYear()} KICKS. Se trata de un proyecto academico.
         </p>
       </div>
     </div>
@@ -267,4 +267,3 @@ function addFooterStyles() {
   
   document.head.appendChild(style);
 }
-

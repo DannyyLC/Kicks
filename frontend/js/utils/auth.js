@@ -321,13 +321,15 @@ export async function resetPassword(resetToken, newPassword) {
 // Endpoints de Productos
 //============================================
 // Obtener todos los productos disponibles
-export async function getProducts(categoria = null, hasDescuento = null) {
+export async function getProducts(categoria = null, hasDescuento = null, precioMin = null, precioMax = null) {
     try {
         let url = API_ENDPOINTS.PRODUCTS.BASE;
         const params = new URLSearchParams();
         
         if (categoria) params.append('categoria', categoria);
         if (hasDescuento !== null) params.append('hasDescuento', hasDescuento);
+        if (precioMin !== null) params.append('precioMin', precioMin);
+        if (precioMax !== null) params.append('precioMax', precioMax);
         
         if (params.toString()) url += `?${params.toString()}`;
         

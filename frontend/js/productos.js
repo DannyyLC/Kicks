@@ -21,6 +21,8 @@ const productosGrid = document.getElementById('productos-grid');
 const searchInput = document.getElementById('search-input');
 const categoryFilter = document.getElementById('category-filter');
 const discountFilter = document.getElementById('discount-filter');
+const priceMinInput = document.getElementById('price-min'); 
+const priceMaxInput = document.getElementById('price-max'); 
 const clearFiltersBtn = document.getElementById('clear-filters');
 const resultsCount = document.getElementById('results-count');
 
@@ -64,10 +66,6 @@ async function cargarProductos() {
             if (categoriasValidas.includes(categoriaLower)) {
                 categoria = categoriaLower;
                 categoryFilter.value = categoriaLower;
-            } else {
-                // Categoría inválida, eliminar de la URL
-                urlParams.delete('categoria');
-                actualizarURL(urlParams);
             }
         }
 
@@ -75,10 +73,6 @@ async function cargarProductos() {
         if (descuentoParam === 'true') {
             hasDescuento = true;
             discountFilter.value = 'true';
-        } else if (descuentoParam) {
-            // Parámetro inválido, eliminar de la URL
-            urlParams.delete('descuento');
-            actualizarURL(urlParams);
         }
 
         const result = await getProducts(categoria, hasDescuento);
@@ -91,8 +85,10 @@ async function cargarProductos() {
         todosLosProductos = procesarProductos(result.products);
         productosFiltrados = [...todosLosProductos];
 
-        // Aplicar filtros y renderizar
-        aplicarFiltros();
+        window.history.replaceState({}, '', window.location.pathname);
+
+        // Renderizar
+        renderizarProductos();
 
     } catch (error) {
         console.error('Error al cargar productos:', error);
@@ -105,46 +101,59 @@ async function cargarProductos() {
     }
 }
 
-// Actualizar URL sin recargar la página
-function actualizarURL(urlParams) {
-    const nuevaUrl = urlParams.toString() 
-        ? `${window.location.pathname}?${urlParams.toString()}`
-        : window.location.pathname;
-    
-    window.history.replaceState({}, '', nuevaUrl);
-}
-
 // ============================================
 // APLICAR FILTROS
 // ============================================
-function aplicarFiltros() {
+async function aplicarFiltros() {
     const searchTerm = searchInput.value.toLowerCase().trim();
     const selectedCategory = categoryFilter.value.toLowerCase();
     const selectedDiscount = discountFilter.value;
+    const precioMin = priceMinInput.value ? parseFloat(priceMinInput.value) : null;
+    const precioMax = priceMaxInput.value ? parseFloat(priceMaxInput.value) : null;
 
-    // Filtrar productos
-    productosFiltrados = todosLosProductos.filter(producto => {
-        // Filtro de búsqueda
-        const matchSearch = !searchTerm || 
-            producto.nombre.toLowerCase().includes(searchTerm) ||
-            (producto.categoria && producto.categoria.toLowerCase().includes(searchTerm)) ||
-            (producto.marca && producto.marca.toLowerCase().includes(searchTerm));
+    // Mostrar loading mientras se obtienen productos del backend
+    productosGrid.innerHTML = `
+        <div class="products-loading">
+            <div class="loading-spinner"></div>
+            <p>Cargando productos...</p>
+        </div>
+    `;
 
-        // Filtro de categoría
-        const matchCategory = !selectedCategory || 
-            (producto.categoria && producto.categoria.toLowerCase() === selectedCategory);
+    try {
+        const categoria = selectedCategory || null;
+        const hasDescuento = selectedDiscount === 'true' ? 1 : null;
+        
+        const result = await getProducts(categoria, hasDescuento, precioMin, precioMax);
 
-        // Filtro de descuento
-        let matchDiscount = true;
-        if (selectedDiscount === 'true') {
-            matchDiscount = producto.hasDescuento === 1 || (producto.descuento && producto.descuento > 0);
+        if (!result.success) {
+            throw new Error(result.error);
         }
 
-        return matchSearch && matchCategory && matchDiscount;
-    });
+        // Procesar productos con URLs completas
+        todosLosProductos = procesarProductos(result.products);
 
-    // Renderizar productos filtrados
-    renderizarProductos();
+        productosFiltrados = todosLosProductos.filter(producto => {
+            // Si no hay búsqueda, mostrar todos
+            if (!searchTerm) return true;
+
+            // Filtro de búsqueda por texto
+            return producto.nombre.toLowerCase().includes(searchTerm) ||
+                   (producto.categoria && producto.categoria.toLowerCase().includes(searchTerm)) ||
+                   (producto.marca && producto.marca.toLowerCase().includes(searchTerm));
+        });
+
+        // Renderizar productos filtrados
+        renderizarProductos();
+
+    } catch (error) {
+        console.error('Error al aplicar filtros:', error);
+        productosGrid.innerHTML = `
+            <div class="products-error">
+                <p>No se pudieron cargar los productos.</p>
+                <button onclick="aplicarFiltros()" class="btn btn-primary">Reintentar</button>
+            </div>
+        `;
+    }
 }
 
 // ============================================
@@ -196,6 +205,8 @@ function limpiarFiltros() {
     searchInput.value = '';
     categoryFilter.value = '';
     discountFilter.value = '';
+    priceMinInput.value = ''; 
+    priceMaxInput.value = ''; 
     
     // Limpiar parámetros de URL
     const url = new URL(window.location);
@@ -209,18 +220,42 @@ function limpiarFiltros() {
 // EVENT LISTENERS
 // ============================================
 function inicializarEventListeners() {
-    // Búsqueda con debounce
+    // Búsqueda con debounce (solo filtra en frontend)
     let searchTimeout;
     searchInput.addEventListener('input', () => {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
-            aplicarFiltros();
+            // Solo filtrar en frontend si ya tenemos productos
+            productosFiltrados = todosLosProductos.filter(producto => {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                if (!searchTerm) return true;
+
+                return producto.nombre.toLowerCase().includes(searchTerm) ||
+                       (producto.categoria && producto.categoria.toLowerCase().includes(searchTerm)) ||
+                       (producto.marca && producto.marca.toLowerCase().includes(searchTerm));
+            });
+            renderizarProductos();
         }, 300);
     });
 
-    // Filtros de select
     categoryFilter.addEventListener('change', aplicarFiltros);
     discountFilter.addEventListener('change', aplicarFiltros);
+
+    // Event listeners para precio con debounce
+    let priceTimeout;
+    priceMinInput.addEventListener('input', () => {
+        clearTimeout(priceTimeout);
+        priceTimeout = setTimeout(() => {
+            aplicarFiltros();
+        }, 500);
+    });
+
+    priceMaxInput.addEventListener('input', () => {
+        clearTimeout(priceTimeout);
+        priceTimeout = setTimeout(() => {
+            aplicarFiltros();
+        }, 500);
+    });
 
     // Botón limpiar filtros
     clearFiltersBtn.addEventListener('click', limpiarFiltros);
