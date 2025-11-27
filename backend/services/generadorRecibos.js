@@ -15,13 +15,14 @@ async function generarReciboPDF(datosRecibo) {
     total
   } = datosRecibo;
 
-  // Formatear fecha
+  // Formatear fecha en horario de CDMX
   const fechaFormateada = new Date(fecha).toLocaleDateString('es-MX', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
+    timeZone: 'America/Mexico_City'
   });
 
   // Generar filas de artículos
