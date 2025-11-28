@@ -1,4 +1,4 @@
-import { cartIcon, userIcon, menuIcon, closeIcon, adminIcon } from '../js/utils/icons.js';
+import { cartIcon, userIcon, menuIcon, closeIcon, adminIcon, logoutIcon } from '../js/utils/icons.js';
 import { isAuthenticated, logout, isAdmin, countCart, getProfile } from '../js/utils/auth.js';
 import { initFontSizeSelector, setupFontSizeSelectors } from './font-size-selector.js'; 
 
@@ -80,7 +80,7 @@ export async function Header() {
           ` : ''}
           <a href="${basePath}tienda/carrito.html" class="navbar-icon-btn cart-link" aria-label="Carrito">
             ${cartIcon}
-            ${cartItemCount > 0 ? `<span class="cart-badge">${cartItemCount}</span>` : ''}
+            <span class="cart-badge" style="${cartItemCount > 0 ? '' : 'display: none;'}">${displayCount}</span>
           </a>
           <button class="navbar-icon-btn user-btn" aria-label="Cuenta">
             ${userIcon}
@@ -145,18 +145,14 @@ export async function Header() {
             <a href="${basePath}tienda/carrito.html" class="mobile-nav-link mobile-nav-icon cart-link" aria-label="Carrito">
               <div style="position: relative; display: inline-flex;">
                 ${cartIcon}
-                ${cartItemCount > 0 ? `<span class="cart-badge">${displayCount}</span>` : ''}
+                <span class="cart-badge" style="${cartItemCount > 0 ? '' : 'display: none;'}">${displayCount}</span>
               </div>
               <span>Carrito</span>
             </a>
           </li>
           <li>
             <button class="mobile-nav-link mobile-nav-icon" aria-label="Cerrar sesión" data-action="logout" id="mobile-logout-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-              </svg>
+              ${logoutIcon}
               <span>Cerrar sesión</span>
             </button>
           </li>
