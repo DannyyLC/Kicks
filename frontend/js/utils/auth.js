@@ -630,7 +630,6 @@ export async function countCart() {
             'GET'
         );
         if (response.ok) {
-            document.dispatchEvent(new CustomEvent('cartUpdated'));
             return { 
                 success: true, 
                 itemCount: response.count 
